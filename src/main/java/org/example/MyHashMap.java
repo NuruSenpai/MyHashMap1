@@ -5,7 +5,7 @@ import java.util.Objects;
 public class MyHashMap<K, V> {
     private static final int DEFAULT_INITIAL_CAPACITY = 16;
 
-    private final Entry<K, V>[] table; //main массив
+    private  Entry<K, V>[] table; //main массив
     private int size;
 
     @SuppressWarnings("unchecked")
@@ -53,6 +53,9 @@ public class MyHashMap<K, V> {
         }
         prev.next = new Entry<>(key, value);
         size++;
+        if ((double) size / table.length > 0.75) {
+            resize();
+        }
     }
 
     public V get(K key) {
@@ -99,5 +102,28 @@ public class MyHashMap<K, V> {
         return key == null ? 0 : Math.abs(key.hashCode() % table.length);
     }
 
-    //TODO реализовать resize, containsKey
+    private void resize() {
+        int newCapacity = table.length * 2;
+        Entry<K, V>[] newTable = new Entry[newCapacity];
+
+        for(Entry<K, V> entry : table){
+            while(entry != null){
+                Entry<K, V> next = entry.next;
+
+                int newIndex = entry.key == null ? 0 : Math.abs(entry.key.hashCode() % newCapacity);
+                entry.next = newTable[newIndex];
+                newTable[newIndex] = entry;
+                entry = next;
+
+            }
+        }
+
+        table = newTable;
+    }
+
+    public boolean containsKey(K key) {
+        return findEntry(key) != null;
+    }
+
+
 }

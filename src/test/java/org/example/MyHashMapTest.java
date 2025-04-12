@@ -59,4 +59,19 @@ class MyHashMapTest {
         map.remove("notExi");
         assertEquals(1, map.getSize());
     }
+
+    @Test
+    void resize() {
+        MyHashMap<Integer, String> map = new MyHashMap<>();
+
+        for (int i = 0; i < 20; i++) {
+            map.put(i, "value" + i);
+        }
+
+        for (int i = 0; i < 20; i++) {
+            assertEquals("value" + i, map.get(i));
+        }
+
+        assertEquals(20, map.getSize());
+    }
 }
